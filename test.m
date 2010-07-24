@@ -1,7 +1,7 @@
 #include "test.h"
 //#include <MorefilesX.h>
 
-Boolean processfile(char *path) {
+Boolean processfile(const char *path) {
 	CFStringRef thePath;
 	Boolean result;
 	
@@ -26,7 +26,7 @@ int main (int argc, const char * argv[]) {
 	FSRef **refsHandle;
 	
 	
-	sts = FSPathMakeRef(argv[1],&ref,&isDir);
+	sts = FSPathMakeRef((const UInt8 *)argv[1],&ref,&isDir);
 	if (isDir) {
 		container = (FSRef *)NewPtr(sizeof(container));
 		sts = FSMakeFSRef(spec.vRefNum, spec.parID, spec.name, container);
