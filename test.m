@@ -1,52 +1,40 @@
-#include "test.h"
-//#include <MorefilesX.h>
+#import <CoreFoundation/CoreFoundation.h>
+#import <Foundation/Foundation.h>
+#import <AppKit/AppKit.h>
 
-Boolean processfile(const char *path) {
-	CFStringRef thePath;
+Boolean processFile(NSString *path) {
 	Boolean result;
 	
 	CFMutableDictionaryRef attributes = CFDictionaryCreateMutable(NULL,0,NULL,NULL);
-	thePath = CFStringCreateWithCString(NULL,path,kCFStringEncodingMacRoman);
-	if (CFStringHasSuffix(thePath, (CFStringRef)@".of")) {
-		// NSLog(@"File: %@", thePath);
-		result = GetMetadataForFile(NULL, attributes, (CFStringRef)@"", thePath);
-	}
-	if (attributes) CFRelease(attributes);
+	result = extract(NULL, attributes, (CFStringRef)@"", (CFStringRef)path);
+	if (attributes) 
+		CFRelease(attributes);
 	return result;
 }
 
-int main (int argc, const char * argv[]) {
-	char filepath[256];
-	FSSpec spec;
-	ItemCount numRefs;
-	Boolean containerChanged, isDir;
-	OSStatus sts;
-	OSErr err;
-	FSRef *container = nil, ref, *refPtr;
-	FSRef **refsHandle;
+void processFolder(NSString * path) {
+	BOOL isDir;
+	NSString *file;
+	NSFileManager * fileManager = [NSFileManager defaultManager];
 	
-	
-	sts = FSPathMakeRef((const UInt8 *)argv[1],&ref,&isDir);
-	if (isDir) {
-		container = (FSRef *)NewPtr(sizeof(container));
-		sts = FSMakeFSRef(spec.vRefNum, spec.parID, spec.name, container);
-		refPtr = (FSRef *)&refsHandle;
-		err = FSGetDirectoryItems(&ref, refPtr, &numRefs, &containerChanged);
-		if (!err) {
-			int i;
-			refPtr = *refsHandle;
-			for(i=0; i<numRefs; i++) {
-				ref = refPtr[i];
-				sts = FSRefMakePath(&ref, (UInt8 *)&filepath,256);
-				if (!sts) 
-					processfile(filepath);
-			}
-			DisposeHandle((Handle)refsHandle);
-			err = MemError();
+	if ([fileManager fileExistsAtPath:path isDirectory:&isDir] && isDir) {
+		NSDirectoryEnumerator *dirEnumerator = [fileManager enumeratorAtPath:path];
+		while ((file = [dirEnumerator nextObject])) {
+			file = [path stringByAppendingPathComponent:file];
+			//NSLog(@"LibSpotlight testing: %@", file);
+			processFolder(file);
 		}
-		DisposePtr((Ptr)container);
 	} else
-		processfile(argv[1]);
+		processFile(path);
+}
+
+int main (int argc, const char * argv[]) {
+    if (argc < 2)
+        return -1;
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    NSString * path = [NSString stringWithUTF8String: (const char *)argv[1]];
+	processFolder(path);
+    [pool release];
 	return 0;
 }
 
