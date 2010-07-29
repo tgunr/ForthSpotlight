@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <syslog.h>
 
-#include "GetMetadataForFile.h"
+#include "extract.h"
 
 /* -----------------------------------------------------------------------------
    Step 1
@@ -49,7 +49,7 @@
    and return it as a dictionary
    ----------------------------------------------------------------------------- */
 
-Boolean GetMetadataForFile(void* thisInterface, 
+Boolean extract(void* thisInterface, 
 			   CFMutableDictionaryRef attributes, 
 			   CFStringRef contentTypeUTI,
 			   CFStringRef pathToFile)
