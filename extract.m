@@ -1,12 +1,12 @@
-#include <CoreFoundation/CoreFoundation.h>
-#include <CoreServices/CoreServices.h> 
-#include <CoreFoundation/CFPlugInCOM.h>
-#include <Foundation/Foundation.h>
-#include <MOKit/MOKit.h>
-#include <stdio.h>
-#include <syslog.h>
+#import <CoreFoundation/CoreFoundation.h>
+#import <CoreServices/CoreServices.h> 
+#import <CoreFoundation/CFPlugInCOM.h>
+#import <Foundation/Foundation.h>
+#import <RegexKit/RegexKit.h>
+#import <stdio.h>
+#import <syslog.h>
 
-#include "extract.h"
+#import "extract.h"
 
 /* -----------------------------------------------------------------------------
    Step 1
@@ -40,8 +40,10 @@
   
    ----------------------------------------------------------------------------- */
 
-
-
+Boolean assertRegex(NSString * stringToSearch, NSString* regexString) {
+    NSPredicate *regex = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", regexString];
+    return [regex evaluateWithObject:stringToSearch];    
+}
 /* -----------------------------------------------------------------------------
     Get metadata attributes from file
    
@@ -180,29 +182,13 @@ nextline:
 			fgets(line, 256, fh);
 			NSString *theLine = [[[NSString alloc] initWithCString:line encoding:NSNEXTSTEPStringEncoding] autorelease];
 			
-			// Look for colon definitions
-			MORegularExpression *thePattern = [MORegularExpression regularExpressionWithString: @"^\\s*:\\s+(\\S+)\\s+"];
-			// bool valid = [thePattern expressionString];
-			if ([thePattern matchesString:theLine]) {
-				// syslog(LOG_ALERT, "Forth Definition: %s", [[thePattern substringForSubexpressionAtIndex: 1 inString: theLine] UTF8String]);
-				[definitions addObject: [thePattern substringForSubexpressionAtIndex: 1 inString: theLine]];
-				// NSLog(@"Def-: %@", [definitions lastObject]);
-			} else {
-
-			MORegularExpression *thePattern = [MORegularExpression regularExpressionWithString: @"^\\s*(code|CODE)\\s+(\\S+)\\s+"];
-			if ([thePattern matchesString:theLine]) {
-				// syslog(LOG_ALERT, "Forth Code: %s", [[thePattern substringForSubexpressionAtIndex: 1 inString: theLine] UTF8String]);
-				[definitions addObject: [thePattern substringForSubexpressionAtIndex: 1 inString: theLine]];
-				// NSLog(@"Def-: %@", [definitions lastObject]);
-			} else {
-
-			MORegularExpression *thePattern = [MORegularExpression regularExpressionWithString: @"^\\s*(tcode|TCODE)\\s+(\\S+)\\s+"];
-			if ([thePattern matchesString:theLine]) {
-				// syslog(LOG_ALERT, "Forth TCode: %s", [[thePattern substringForSubexpressionAtIndex: 1 inString: theLine] UTF8String]);
-				[definitions addObject: [thePattern substringForSubexpressionAtIndex: 1 inString: theLine]];
-				// NSLog(@"Def-: %@", [definitions lastObject]);
-			}}}
-			
+			if (assertRegex(theLine, @"^:\\s*(\\S+)\\s+.*") || 
+				assertRegex(theLine, @"^\\s*(code|CODE)\\s+(\\S+)\\s+.*") ||
+				assertRegex(theLine, @"^\\s*(tcode|TCODE)\\s+(\\S+)\\s+.*")) {
+				NSArray * lineComponents = [theLine componentsSeparatedByString: @" "];
+				NSString *definition = [lineComponents objectAtIndex: 1];
+				[definitions addObject: definition];			
+			}
 			[bigString appendString:theLine];
 			[pool release];
 		} while (!feof(fh));
