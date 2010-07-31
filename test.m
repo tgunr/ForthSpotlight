@@ -31,10 +31,10 @@ void processFolder(NSString * path) {
 int main (int argc, const char * argv[]) {
     if (argc < 2)
         return -1;
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    NSString * path = [NSString stringWithUTF8String: (const char *)argv[1]];
+//	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	NSString * path = [NSString stringWithUTF8String: (const char *)argv[1]];
 	processFolder(path);
-    [pool release];
+//    [pool release];
 	return 0;
 }
 
