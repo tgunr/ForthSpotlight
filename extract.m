@@ -68,7 +68,9 @@ Boolean extract(void* thisInterface,
 //	NSString *date, *time;
 	NSArray * lineComponents;
 	NSArray * lineSubComponents;
+#ifndef TESTING
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+#endif
 	NSMutableArray *definitions = [[NSMutableArray alloc] initWithCapacity: 128];
 	NSMutableString	*sourceContent = [NSMutableString stringWithCapacity: 4096];
 	
@@ -258,9 +260,11 @@ Boolean extract(void* thisInterface,
 										  forKey:(NSString *)kMDItemKind];
 	[(NSMutableDictionary *)attributes setObject:sourceContent forKey: (id)kMDItemTextContent];
 //	[sourceContent release];
-	[definitions release];
+//	[definitions release];
 	
 end:
+#ifndef TESTING
 	[pool release];
+#endif
 	return success;
 }
