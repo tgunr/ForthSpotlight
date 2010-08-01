@@ -68,9 +68,7 @@ Boolean extract(void* thisInterface,
 	NSArray * lineComponents;
 	NSArray * lineSubComponents;
 	Boolean success=NO;
-//#ifndef TESTING
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-//#endif
 	NSMutableArray *definitions = [NSMutableArray arrayWithCapacity: 128];
 	NSMutableString	*sourceContent = [NSMutableString stringWithCapacity: 4096];
 	
@@ -80,6 +78,8 @@ Boolean extract(void* thisInterface,
 	NSArray * myDocuentTypes = [bundleDictionary objectForKey:@"CFBundleDocumentTypes"];
 	NSDictionary * myDocuentTypesDictionary = [myDocuentTypes objectAtIndex:0];
 	NSArray * myFileExtensions = [myDocuentTypesDictionary objectForKey: @"CFBundleTypeExtensions"];
+	
+	// Fallback option for testing
 	if ([myFileExtensions count] == 0)
 		myFileExtensions = [NSArray arrayWithObjects: @"of", @"fs", @"fth", @"4th", @"fo", @"fas", nil];
 	
@@ -96,20 +96,15 @@ Boolean extract(void* thisInterface,
 	if (!extensionOK)
 		goto end;
 	
-	
 	// setup for the file
-	// NSLog(@"Forth Source File: %@", pathToFile);
 	char *pathPtr = (char *)CFStringGetCStringPtr(pathToFile, kCFStringEncodingUTF8);
-	// NSLog(@"pathPtr: %x", pathPtr);
 	if (pathPtr == NULL) {
 		if (CFStringGetCString(pathToFile, path, 2048, kCFStringEncodingUTF8)) {
 			NSLog(@"ForthSpotlight: %s", path);
-//			syslog(LOG_ALERT, "ForthSpotlight: %s", path);
 			fh = fopen(path, "r");
 		}
 	} else {
 		NSLog(@"ForthSpotlight: %s", pathPtr);
-		//syslog(LOG_ALERT, "ForthSpotlight: %s", pathPtr);
 		fh = fopen(pathPtr, "r");
 	}
 	if (!fh) 
@@ -133,13 +128,10 @@ Boolean extract(void* thisInterface,
 	
 	NSArray * fileLines = nil;
 	if (fileContent) {
-//		fileContent = [fileString string];
 		fileContent = [fileContent stringByReplacingOccurrencesOfString: @"\r" withString: @"\n"];
 		fileContent = [fileContent stringByReplacingOccurrencesOfString: @"\n\n" withString: @"\n"];
 		fileLines = [fileContent componentsSeparatedByString: @"\n"];
 	}
-	
-//	[fileString release];
 	
 	for (NSString *theString in fileLines) {
 		// syslog(LOG_ALERT, "Forth File: %s", line);
@@ -149,11 +141,12 @@ Boolean extract(void* thisInterface,
 		
 		// Look thu header lines to glean info
 		// syslog(LOG_ALERT, "foundInitial = %d", foundInitial);
+
 		// Look for 'File:` in the line
 		theRange = [theString rangeOfString:@"File:\t" options: NSLiteralSearch range: range];
 		// syslog(LOG_ALERT, "Forth File: theRange = %d %d", theRange.location, theRange.length);
 		if (theRange.location != NSNotFound) {
-			// found it, now split line at the ',`
+			// found it, now split line at the ',` to see if it is an old CVS style tagged file
 			lineComponents = [theString componentsSeparatedByString:@",v "];
 			if ([lineComponents count] == 2) {
 				lineSubComponents = [lineComponents objectAtIndex: 1];
@@ -190,7 +183,7 @@ Boolean extract(void* thisInterface,
 			}
 		}
 		// Look for other data after the initial header line
-		// For now, just the Contains: line
+		// Find the containing line describing the file content
 		theRange = [theString rangeOfString:@"Contains:" options: NSLiteralSearch range: range];
 		if (theRange.location != NSNotFound) {
 			// found it, now split line at Contains:
@@ -204,7 +197,7 @@ Boolean extract(void* thisInterface,
 				success=YES;
 			}
 		}
-		// Now parse for definitions
+		// Parse for defining words
 		if (assertRegex(theString, @"^:\\s*(\\S+)\\s+.*") || 
 			assertRegex(theString, @"^\\s*(code|CODE)\\s+(\\S+)\\s+.*") ||
 			assertRegex(theString, @"^\\s*(tcode|TCODE)\\s+(\\S+)\\s+.*")) {
@@ -214,6 +207,7 @@ Boolean extract(void* thisInterface,
 			definition = [definition stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceCharacterSet]];
 			[definitions addObject: definition];			
 		}
+		// Find the Version number, if any
 		if (!foundTagLine) {
 			theRange = [theString rangeOfString:@"Version:" options: NSLiteralSearch range: range];
 			if (theRange.location != NSNotFound) {
@@ -225,6 +219,7 @@ Boolean extract(void* thisInterface,
 													  forKey:(NSString *)kMDItemVersion];
 				success=YES;
 			}
+			// Find the Directly Responsible Individual (DRI), if any
 			theRange = [theString rangeOfString:@"DRI:" options: NSLiteralSearch range: range];
 			if (theRange.location != NSNotFound) {
 				theString = [theString stringByReplacingOccurrencesOfString: @"\t" withString: @" "];
@@ -241,6 +236,7 @@ Boolean extract(void* thisInterface,
 		theString = [theString stringByReplacingOccurrencesOfString: @"\t" withString: @" "];
 		[sourceContent appendString:theString];
 	}
+
 	// store definitions into metadata
 	if ([definitions count] > 0) {
 		[(NSMutableDictionary *)attributes setObject:definitions forKey:@"public.forth-source.definitions"];
@@ -250,16 +246,12 @@ Boolean extract(void* thisInterface,
 //		}
 		success=YES;
 	}
-//	[definitions release];
 
 	[(NSMutableDictionary *)attributes setObject:@"Forth Source File"
 										  forKey:(NSString *)kMDItemKind];
 	[(NSMutableDictionary *)attributes setObject:sourceContent forKey: (id)kMDItemTextContent];
-//	[sourceContent release];
 	
 end:
-//#ifndef TESTING
 	[pool release];
-//#endif
 	return success;
 }
