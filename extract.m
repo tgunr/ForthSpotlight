@@ -84,10 +84,9 @@ Boolean extract(void* thisInterface,
 		myFileExtensions = [NSArray arrayWithObjects: @"of", @"fs", @"fth", @"4th", @"fo", @"fas", nil];
 	
 	NSString * fileExtension = [(NSString *)pathToFile pathExtension];
-	NSEnumerator *extEnumerator = [myFileExtensions objectEnumerator];
 	NSString * extObject;
 	Boolean extensionOK = NO;
-	while (extObject = [extEnumerator nextObject]) {
+	for (extObject in myFileExtensions) {
 		if ([fileExtension isEqualToString:extObject]) {
 			extensionOK = YES;
 			break;
@@ -142,9 +141,7 @@ Boolean extract(void* thisInterface,
 	
 //	[fileString release];
 	
-	NSUInteger i, count = [fileLines count];
-	for (i = 0; i < count; i++) {
-		NSString * theString = [fileLines objectAtIndex:i];
+	for (NSString *theString in fileLines) {
 		// syslog(LOG_ALERT, "Forth File: %s", line);
 		
 		range.location = 0;
