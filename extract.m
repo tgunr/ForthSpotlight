@@ -59,7 +59,6 @@ Boolean extract(void* thisInterface,
     /* Return the attribute keys and attribute values in the dict */
     /* Return TRUE if successful, FALSE if there was no data provided */
     
-	Boolean success=NO;
 	Boolean foundTagLine=NO;
 	char path[2048];
 	FILE * fh = NULL;
@@ -68,22 +67,21 @@ Boolean extract(void* thisInterface,
 //	NSString *date, *time;
 	NSArray * lineComponents;
 	NSArray * lineSubComponents;
-#ifndef TESTING
+	Boolean success=NO;
+//#ifndef TESTING
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-#endif
-	NSMutableArray *definitions = [[NSMutableArray alloc] initWithCapacity: 128];
+//#endif
+	NSMutableArray *definitions = [NSMutableArray arrayWithCapacity: 128];
 	NSMutableString	*sourceContent = [NSMutableString stringWithCapacity: 4096];
 	
-#ifndef TESTING
 	// Grab our plist for file extensions
 	NSBundle * myBundle = [NSBundle bundleWithIdentifier: @"com.polymicrosystems.spotlight.forth"];
 	NSDictionary * bundleDictionary = [myBundle infoDictionary];
 	NSArray * myDocuentTypes = [bundleDictionary objectForKey:@"CFBundleDocumentTypes"];
 	NSDictionary * myDocuentTypesDictionary = [myDocuentTypes objectAtIndex:0];
 	NSArray * myFileExtensions = [myDocuentTypesDictionary objectForKey: @"CFBundleTypeExtensions"];
-#else
-	NSArray * myFileExtensions = [NSArray arrayWithObjects: @"of", @"fs", @"fth", @"4th", @"fo", @"fas", nil];
-#endif
+	if ([myFileExtensions count] == 0)
+		myFileExtensions = [NSArray arrayWithObjects: @"of", @"fs", @"fth", @"4th", @"fo", @"fas", nil];
 	
 	NSString * fileExtension = [(NSString *)pathToFile pathExtension];
 	NSEnumerator *extEnumerator = [myFileExtensions objectEnumerator];
@@ -106,13 +104,13 @@ Boolean extract(void* thisInterface,
 	// NSLog(@"pathPtr: %x", pathPtr);
 	if (pathPtr == NULL) {
 		if (CFStringGetCString(pathToFile, path, 2048, kCFStringEncodingUTF8)) {
-			// NSLog(@"path: %s", path);
-			syslog(LOG_ALERT, "ForthSpotlight: %s", path);
+			NSLog(@"ForthSpotlight: %s", path);
+//			syslog(LOG_ALERT, "ForthSpotlight: %s", path);
 			fh = fopen(path, "r");
 		}
 	} else {
-		// NSLog(@"pathPtr: %s", pathPtr);
-		syslog(LOG_ALERT, "ForthSpotlight: %s", pathPtr);
+		NSLog(@"ForthSpotlight: %s", pathPtr);
+		//syslog(LOG_ALERT, "ForthSpotlight: %s", pathPtr);
 		fh = fopen(pathPtr, "r");
 	}
 	if (!fh) 
@@ -255,16 +253,16 @@ Boolean extract(void* thisInterface,
 //		}
 		success=YES;
 	}
-	
+//	[definitions release];
+
 	[(NSMutableDictionary *)attributes setObject:@"Forth Source File"
 										  forKey:(NSString *)kMDItemKind];
 	[(NSMutableDictionary *)attributes setObject:sourceContent forKey: (id)kMDItemTextContent];
 //	[sourceContent release];
-//	[definitions release];
 	
 end:
-#ifndef TESTING
+//#ifndef TESTING
 	[pool release];
-#endif
+//#endif
 	return success;
 }
