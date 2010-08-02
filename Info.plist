@@ -71,7 +71,7 @@
 			<key>UTTypeIdentifier</key>
 			<string>public.forth-source</string>
 			<key>UTTypeReferenceURL</key>
-			<string>http://ofweb.apple.com</string>
+			<string>http://forth.org</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>
