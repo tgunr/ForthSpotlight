@@ -1,0 +1,8 @@
+
+: test.fo-defintion ( color x y w h -- )
+    " fill-rectangle" myscreen $call-method ;
+   
+CODE test.fo-code ( ms -- pos.x pos.y buttons true|false )
+    " get-event" mymouse $call-method 
+   
+TCODE test.fo-tcode

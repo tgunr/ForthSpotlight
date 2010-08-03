@@ -1,0 +1,8 @@
+
+: test.of-defintion ( color x y w h -- )
+    " fill-rectangle" myscreen $call-method ;
+   
+CODE test.of-code ( ms -- pos.x pos.y buttons true|false )
+    " get-event" mymouse $call-method 
+   
+TCODE test.of-tcode
