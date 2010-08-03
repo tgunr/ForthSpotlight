@@ -6,7 +6,7 @@ Boolean processFile(NSString *path) {
 	Boolean result;
 	
 	CFMutableDictionaryRef attributes = CFDictionaryCreateMutable(NULL,0,NULL,NULL);
-	result = extract(NULL, attributes, (CFStringRef)@"", (CFStringRef)path);
+	result = extract_forth(NULL, attributes, (CFStringRef)@"", (CFStringRef)path);
 	if (attributes) 
 		CFRelease(attributes);
 	return result;
