@@ -55,7 +55,7 @@ assertRegex(NSString * stringToSearch, NSString * regexString)
    ----------------------------------------------------------------------------- */
 
 Boolean
-extract_forth(void * thisInterface,
+extract(void * thisInterface,
 	CFMutableDictionaryRef attributes,
 	CFStringRef contentTypeUTI,
 	CFStringRef pathToFile)
@@ -232,7 +232,7 @@ extract_forth(void * thisInterface,
 				NSString * author = [lineComponents objectAtIndex: 1];
 				author = [author stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceCharacterSet]];
 				[(NSMutableDictionary *)attributes setObject: author
-				 forKey: (NSString *)kMDItemVersion];
+				 forKey: (NSString *)kMDItemContactKeywords];
 				success = YES;
 			}
 		}
@@ -243,7 +243,7 @@ extract_forth(void * thisInterface,
 
 	// store definitions into metadata
 	if ([definitions count] > 0) {
-		[(NSMutableDictionary *)attributes setObject: definitions forKey: @"public_forth_source_definitions"];
+		[(NSMutableDictionary *)attributes setObject: definitions forKey: @"public_forth_definitions"];
 //		int i;
 //		for(i=0; i < [definitions count]; i++) {
 //			NSLog(@"Def %d = %@", i, [definitions objectAtIndex: i]);
