@@ -44,6 +44,7 @@
 
 #include <CoreFoundation/CoreFoundation.h>
 #include <CoreServices/CoreServices.h> 
+#include "extract.h"
 
 /* -----------------------------------------------------------------------------
    Step 1
@@ -81,8 +82,6 @@
 struct NSString;
 struct NSMutableDictionary;
 
-extern int extract(struct NSString *path, struct NSMutableDictionary *attributes);
-
 
 /* -----------------------------------------------------------------------------
     Get metadata attributes from file
@@ -96,6 +95,5 @@ Boolean GetMetadataForFile(void* thisInterface,
 			   CFStringRef contentTypeUTI,
 			   CFStringRef pathToFile)
 {
-
-	return extract((struct NSString *)pathToFile, (struct NSMutableDictionary *)attributes);
+    return extract(thisInterface, attributes, contentTypeUTI, pathToFile);
 }

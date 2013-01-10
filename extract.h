@@ -15,4 +15,9 @@ Boolean GetMetadataForFile(void* thisInterface,
 						   CFStringRef contentTypeUTI,
 						   CFStringRef pathToFile);
 
+Boolean 
+extract(void * thisInterface,
+        CFMutableDictionaryRef attributes,
+        CFStringRef contentTypeUTI,
+        CFStringRef pathToFile);
 #endif

@@ -17,21 +17,24 @@
 				<string>fas</string>
 			</array>
 			<key>CFBundleTypeName</key>
-			<string>Forth Source</string>
+			<string>Forth Source Code File</string>
 			<key>CFBundleTypeRole</key>
-			<string>MDImporter</string>
+			<string>None</string>
 			<key>LSItemContentTypes</key>
 			<array>
 				<string>public.forth-source</string>
+				<string>public.source-file</string>
 			</array>
 		</dict>
 	</array>
 	<key>CFBundleExecutable</key>
-	<string>Forth Spotlighter</string>
+	<string>${EXECUTABLE_NAME}</string>
 	<key>CFBundleIconFile</key>
 	<string></string>
 	<key>CFBundleIdentifier</key>
 	<string>com.polymicrosystems.spotlight.forth</string>
+	<key>CFBundleName</key>
+	<string>${PRODUCT_NAME}</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleVersion</key>
@@ -54,33 +57,51 @@
 	</dict>
 	<key>CFPlugInUnloadFunction</key>
 	<string></string>
-	<key>UTExportedTypeDeclarations</key>
+	<key>UTImportedTypeDeclarations</key>
 	<array>
 		<dict>
 			<key>UTTypeConformsTo</key>
 			<array>
-				<string>public.forth-source</string>
-				<string>public.source</string>
-				<string>public.plain-text</string>
 				<string>public.text</string>
-				<string>public.data</string>
-				<string>public.content</string>
+				<string>public.source-code</string>
 			</array>
-			<key>UTTypeDescription</key>
-			<string>Forth Source File</string>
 			<key>UTTypeIdentifier</key>
 			<string>public.forth-source</string>
-			<key>UTTypeReferenceURL</key>
-			<string>http://forth.org</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>
 				<array>
 					<string>of</string>
 					<string>fs</string>
-					<string>fo</string>
 					<string>fth</string>
 					<string>4th</string>
+					<string>fo</string>
+					<string>fas</string>
+				</array>
+			</dict>
+		</dict>
+	</array>
+	<key>UTExportedTypeDeclarations</key>
+	<array>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.text</string>
+				<string>public.source-code</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Forth Source Code File</string>
+			<key>UTTypeIdentifier</key>
+			<string>public.forth-source</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>of</string>
+					<string>fs</string>
+					<string>fth</string>
+					<string>4th</string>
+					<string>fo</string>
 					<string>fas</string>
 				</array>
 			</dict>
