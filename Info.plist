@@ -19,7 +19,7 @@
 			<key>CFBundleTypeName</key>
 			<string>Forth Source Code File</string>
 			<key>CFBundleTypeRole</key>
-			<string>None</string>
+			<string>MDImporter</string>
 			<key>LSItemContentTypes</key>
 			<array>
 				<string>public.forth-source</string>
@@ -38,7 +38,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleVersion</key>
-	<string>1.0</string>
+	<string>1.1</string>
 	<key>CFPlugInDynamicRegisterFunction</key>
 	<string></string>
 	<key>CFPlugInDynamicRegistration</key>
@@ -57,6 +57,33 @@
 	</dict>
 	<key>CFPlugInUnloadFunction</key>
 	<string></string>
+	<key>UTExportedTypeDeclarations</key>
+	<array>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.text</string>
+				<string>public.source-code</string>
+			</array>
+			<key>UTTypeIdentifier</key>
+			<string>public.forth-source</string>
+			<key>UTTypeDescription</key>
+			<string>Forth Source Code File</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>fs</string>
+					<string>4th</string>
+					<string>fth</string>
+					<string>forth</string>
+					<string>fo</string>
+					<string>fas</string>
+					<string>of</string>
+				</array>
+			</dict>
+		</dict>
+	</array>
 	<key>UTImportedTypeDeclarations</key>
 	<array>
 		<dict>
@@ -67,42 +94,20 @@
 			</array>
 			<key>UTTypeIdentifier</key>
 			<string>public.forth-source</string>
-			<key>UTTypeTagSpecification</key>
-			<dict>
-				<key>public.filename-extension</key>
-				<array>
-					<string>of</string>
-					<string>fs</string>
-					<string>fth</string>
-					<string>4th</string>
-					<string>fo</string>
-					<string>fas</string>
-				</array>
-			</dict>
-		</dict>
-	</array>
-	<key>UTExportedTypeDeclarations</key>
-	<array>
-		<dict>
-			<key>UTTypeConformsTo</key>
-			<array>
-				<string>public.text</string>
-				<string>public.source-code</string>
-			</array>
 			<key>UTTypeDescription</key>
 			<string>Forth Source Code File</string>
-			<key>UTTypeIdentifier</key>
-			<string>public.forth-source</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>
 				<array>
-					<string>of</string>
-					<string>fs</string>
-					<string>fth</string>
-					<string>4th</string>
-					<string>fo</string>
-					<string>fas</string>
+					<array>
+						<string>of</string>
+						<string>fs</string>
+						<string>fth</string>
+						<string>4th</string>
+						<string>fo</string>
+						<string>fas</string>
+					</array>
 				</array>
 			</dict>
 		</dict>
